@@ -1,5 +1,6 @@
-
+# symbolic link to debug logs
 /logs
+# symbolic link to After Effects' scripts folder
 /After Effects Scripts Folder
 
 # macOS
@@ -30,3 +31,28 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# node
+
+.env
+.env-development
+.env-production
+
+## Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+## Dependency directories
+node_modules/
+jspm_packages/
+
+## Optional npm cache directory
+.npm
+
+# editors
+
+## vscode
+
+.vscode
+.vscode-test
