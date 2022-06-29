@@ -1,4 +1,4 @@
-var MT = {
+module.exports = {
     // get an array of properties from a given layer
     getPropertiesFrom: function (layer) {
         var props = [];

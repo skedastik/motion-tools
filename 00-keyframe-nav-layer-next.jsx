@@ -1,8 +1,13 @@
-//@include "(lib)/LogFactory.jsx"
-//@include "(lib)/MT.jsx"
+//@include "node_modules/@yellcorp/extendscript-commonjs/commonjs.js"
+require.init($.fileName);
+
+var LogFactory = require('./lib/LogFactory.jsx');
+var MT = require('./lib/MT.jsx');
 
 (function () {
     var log = new LogFactory('keyframe-nav-next.log');
+
+    log('hello world');
 
     try {
         var layer = app.project.activeItem.selectedLayers[0];

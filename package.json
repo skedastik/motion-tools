@@ -1,0 +1,22 @@
+{
+  "name": "motion-tools",
+  "version": "0.0.0",
+  "description": "Various homespun After Effects scripts.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/skedastik/motion-tools.git"
+  },
+  "author": "Alaric Holloway",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/skedastik/motion-tools/issues"
+  },
+  "homepage": "https://github.com/skedastik/motion-tools#readme",
+  "dependencies": {
+    "@yellcorp/extendscript-commonjs": "github:yellcorp/extendscript-commonjs"
+  }
+}

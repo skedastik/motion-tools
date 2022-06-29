@@ -56,7 +56,7 @@
  *                                                           One can then start using log('hello world');
  *                                                           SEE THE FULL INSTRUCTIONS https://creative-scripts.com/logging-with-a-smile/  
  */
-var LogFactory = function(file, write, store, level, defaultStatus, continuing) { // jshint ignore: line
+module.exports = function(file, write, store, level, defaultStatus, continuing) { // jshint ignore: line
     /////////////////////////////
     // Allow passing of Object //
     /////////////////////////////
@@ -259,8 +259,8 @@ var LogFactory = function(file, write, store, level, defaultStatus, continuing) 
         //////////////////////////////////////////////////////
         // If the LOG status is appropriate then log it <span class="wp-font-emots-emo-happy"></span> //
         //////////////////////////////////////////////////////
-        date = ' [' + date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + ']';
-        status = ' [' + status + '] ';
+        date = '\t[' + date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getUTCHours() + ':' + date.getUTCMinutes() + ':' + date.getUTCSeconds() + ']';
+        status = '\t[' + status + '] ';
         if (status.length < 11) status = (status + '           ').substr(0, 11);
         if (icon) {
             icon = ('' + icon).toUpperCase();
