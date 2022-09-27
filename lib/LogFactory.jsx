@@ -347,7 +347,7 @@ module.exports = function(file, write, store, level, defaultStatus, continuing) 
         }
         safeFileName = File.encode(
             (isCookie ? '/COOKIE_' : '/LOG_') +
-            f.replace(/^\//, '') + '_' + (1900 + d.getYear()) + (d.toString()).replace(/... (...) (..).+/, '_$1_$2') +
+            f.replace(/^\//, '') + '_' + (1900 + d.getFullYear()) + (d.toString()).replace(/... (...) (..).+/, '_$1_$2') +
             (isCookie ? '.txt' : '.log')
         );
         if (file && file.constructor.name == 'String') {
