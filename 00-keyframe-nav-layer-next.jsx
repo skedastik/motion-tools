@@ -1,10 +1,10 @@
 //@include "node_modules/@yellcorp/extendscript-commonjs/commonjs.js"
 require.init($.fileName);
 
-var LogFactory = require('./lib/LogFactory.jsx');
-var MT = require('./lib/MT.jsx');
-
 (function () {
+    var LogFactory = require('./lib/LogFactory.jsx');
+    var MT = require('./lib/MT.jsx');
+
     var log = new LogFactory('motion-tools.log');
 
     try {
