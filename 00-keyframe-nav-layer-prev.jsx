@@ -5,7 +5,7 @@ var LogFactory = require('./lib/LogFactory.jsx');
 var MT = require('./lib/MT.jsx');
 
 (function () {
-    var log = new LogFactory('keyframe-nav-next.log');
+    var log = new LogFactory('motion-tools.log');
 
     try {
         var layer = app.project.activeItem.selectedLayers[0];
