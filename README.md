@@ -14,4 +14,4 @@ Go to the next/previous keyframe in the currently selected layer.
 
 ## posterize-time
 
-Apply a `posterizeTime(X)` expression to all selected properties where X is inputted via a dialog box.
+Apply a `posterizeTime(X)` expression to all selected properties where X is inputted via a prompt.
