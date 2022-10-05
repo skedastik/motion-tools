@@ -19,7 +19,12 @@ require.init($.fileName);
 
     app.beginUndoGroup("Go to Next Keyframe in Layer");
 
-    var properties = MT.getPropertiesFrom(layer);
+    var properties = MT.getSelectedPropertiesFrom(layer);
+    
+    if (properties.length == 0) {
+        properties = MT.getPropertiesFrom(layer);
+    }
+
     var keyTimes = MT.getDistinctSortedKeyTimesFrom(properties);
     var currentTime = app.project.activeItem.time;
 

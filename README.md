@@ -10,7 +10,7 @@ I use this mainly as a replacement for looping hand-drawn animation footage via 
 
 ## keyframe-nav-layer-next + keyframe-nav-layer-prev
 
-Go to the next/previous keyframe in the currently selected layer.
+Go to the next/previous key in the currently selected layer. If keys are currently selected, only navigate between keys of selected properties.
 
 ## posterize-time
 
