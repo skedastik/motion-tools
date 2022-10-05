@@ -11,3 +11,7 @@ I use this mainly as a replacement for looping hand-drawn animation footage via 
 ## keyframe-nav-layer-next + keyframe-nav-layer-prev
 
 Go to the next/previous keyframe in the currently selected layer.
+
+## posterize-time
+
+Apply a `posterizeTime(X)` expression to all selected properties where X is inputted via a dialog box.
