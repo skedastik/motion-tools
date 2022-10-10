@@ -15,3 +15,7 @@ Go to the next/previous key in the currently selected layer. If keys are current
 ## posterize-time
 
 Apply a `posterizeTime(X)` expression to all selected properties where X is inputted via a prompt.
+
+## shift-layer-to-playhead
+
+Shift the currently selected layer(s) and all of its keys/markers in the timeline such that its start point is aligned with the playhead.
