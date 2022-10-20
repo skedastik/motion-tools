@@ -24,7 +24,7 @@ Shift the currently selected layer(s) and all of its keys/markers in the timelin
 
 ## Photoshop
 
-⚠️ WARNING: These are extremely WIP.
+⚠️ WARNING: These are extremely experimental.
 
 ### ps-select-layer-at-playhead
 
