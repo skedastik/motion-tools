@@ -16,7 +16,7 @@
     function actionDescriptorToString(d) {
         str = [];
         for (var i = 0; i < d.count; i++) {
-            str.push(typeIDToStringID(d.getKey(i)) + ':' + d.getType(d.getKey(i)));
+            str.push(typeIDToStringID(d.getKey(i)) + ' : ' + d.getType(d.getKey(i)));
         }
         return str.join('\n');
     }
@@ -84,32 +84,6 @@
         var idtoNextWholeSecond = stringIDToTypeID( "toNextWholeSecond" );
         desc165.putBoolean( idtoNextWholeSecond, false );
         executeAction( idnextFrame, desc165, DialogModes.NO );
-    }
-    
-    function getTimeline() {
-        var r1 = new ActionReference();
-        var idproperty = stringIDToTypeID( "property" );
-        var idworkOutTime = stringIDToTypeID( "workOutTime" );
-        r1.putProperty( idproperty, idworkOutTime );
-        var idtimeline = stringIDToTypeID( "timeline" );
-        r1.putClass( idtimeline );
-        var d1 = executeActionGet(r1).getObjectValue(stringIDToTypeID("workOutTime"));
-    
-        var r2 = new ActionReference();
-        var idproperty = stringIDToTypeID( "property" );
-        var idworkOutTime = stringIDToTypeID( "workInTime" );
-        r2.putProperty( idproperty, idworkOutTime );
-        var idtimeline = stringIDToTypeID( "timeline" );
-        r2.putClass( idtimeline );
-        var d2 = executeActionGet(r2).getObjectValue(stringIDToTypeID("workInTime"));
-    
-        return {
-            outSeconds: d1.getInteger(d1.getKey(0)),
-            outFrames: d1.getInteger(d1.getKey(1)),
-            inSeconds: d2.getInteger(d2.getKey(0)),
-            inFrames: d2.getInteger(d2.getKey(1)),
-            frameRate: d1.getInteger(d1.getKey(2))
-        };
     }
 
     function clear() {
@@ -201,6 +175,94 @@
         selectLayerByItemIndex(activeLayer.itemIndex);
     }
 
+    function getTimelineTimeInFrames() {
+        var r = new ActionReference();
+        var idproperty = stringIDToTypeID( "property" );
+        var idtime = stringIDToTypeID( "time" );
+        r.putProperty( idproperty, idtime );
+        var idtimeline = stringIDToTypeID( "timeline" );
+        r.putClass( idtimeline );
+        var d = executeActionGet(r).getObjectValue(stringIDToTypeID("time"));
+        
+        var seconds = d.getInteger(stringIDToTypeID("seconds"));
+        var frame = d.getInteger(stringIDToTypeID("frame"));
+        var frameRate = d.getInteger(stringIDToTypeID("frameRate"));
+
+        return seconds * frameRate + frame;
+    }
+
+    function getTimelineDurationInFrames() {
+        var r = new ActionReference();
+        var idproperty = stringIDToTypeID( "property" );
+        var idtime = stringIDToTypeID( "duration" );
+        r.putProperty( idproperty, idtime );
+        var idtimeline = stringIDToTypeID( "timeline" );
+        r.putClass( idtimeline );
+        var d = executeActionGet(r).getObjectValue(stringIDToTypeID("duration"));
+        
+        var seconds = d.getInteger(stringIDToTypeID("seconds"));
+        var frame = d.getInteger(stringIDToTypeID("frame"));
+        var frameRate = d.getInteger(stringIDToTypeID("frameRate"));
+
+        return seconds * frameRate + frame;
+    }
+
+    function getTimelineFrameRate() {
+        var r = new ActionReference();
+        var idproperty = stringIDToTypeID( "property" );
+        var idtime = stringIDToTypeID( "duration" );
+        r.putProperty( idproperty, idtime );
+        var idtimeline = stringIDToTypeID( "timeline" );
+        r.putClass( idtimeline );
+        var d = executeActionGet(r).getObjectValue(stringIDToTypeID("duration"));
+        return d.getInteger(stringIDToTypeID("frameRate"));
+    }
+
+    function moveActiveLayerOutTimeInFrames(framesDelta) {
+        var frameRate = getTimelineFrameRate();
+        var idmoveOutTime = stringIDToTypeID( "moveOutTime" );
+        var desc1857 = new ActionDescriptor();
+        var idtimeOffset = stringIDToTypeID( "timeOffset" );
+        var desc1858 = new ActionDescriptor();
+        var idseconds = stringIDToTypeID( "seconds" );
+        desc1858.putInteger( idseconds, 0 );
+        var idframe = stringIDToTypeID( "frame" );
+        desc1858.putInteger( idframe, framesDelta );
+        var idframeRate = stringIDToTypeID( "frameRate" );
+        desc1858.putDouble( idframeRate, frameRate );
+        var idtimecode = stringIDToTypeID( "timecode" );
+        desc1857.putObject( idtimeOffset, idtimecode, desc1858 );
+        var d = executeAction( idmoveOutTime, desc1857, DialogModes.NO );
+    }
+
+    // move timeline playhead to given frame number
+    function setTimelineTimeInFrames(frame) {
+        var frameRate = getTimelineFrameRate();
+        var seconds = frame % frameRate;
+
+        var idset = stringIDToTypeID( "set" );
+        var desc457 = new ActionDescriptor();
+        var idnull = stringIDToTypeID( "null" );
+        var ref170 = new ActionReference();
+        var idproperty = stringIDToTypeID( "property" );
+        var idtime = stringIDToTypeID( "time" );
+        ref170.putProperty( idproperty, idtime );
+        var idtimeline = stringIDToTypeID( "timeline" );
+        ref170.putClass( idtimeline );
+        desc457.putReference( idnull, ref170 );
+        var idto = stringIDToTypeID( "to" );
+        var desc458 = new ActionDescriptor();
+        var idseconds = stringIDToTypeID( "seconds" );
+        desc458.putInteger( idseconds, seconds );
+        var idframe = stringIDToTypeID( "frame" );
+        desc458.putInteger( idframe, frame - seconds * frameRate );
+        var idframeRate = stringIDToTypeID( "frameRate" );
+        desc458.putDouble( idframeRate, frameRate );
+        var idtimecode = stringIDToTypeID( "timecode" );
+        desc457.putObject( idto, idtimecode, desc458 );
+        executeAction( idset, desc457, DialogModes.NO );
+    }
+
     module.exports = {
         getClassDescriptor: getClassDescriptor,
         actionDescriptorToString: actionDescriptorToString,
@@ -209,9 +271,13 @@
         selectNextSiblingOfLayer: selectNextSiblingOfLayer,
         goToPreviousFrame: goToPreviousFrame,
         goToNextFrame: goToNextFrame,
-        getTimeline: getTimeline,
         clear: clear,
         isPlayheadAtLayer: isPlayheadAtLayer,
-        selectLayerAtPlayhead: selectLayerAtPlayhead
+        selectLayerAtPlayhead: selectLayerAtPlayhead,
+        moveActiveLayerOutTimeInFrames: moveActiveLayerOutTimeInFrames,
+        getTimelineTimeInFrames: getTimelineTimeInFrames,
+        getTimelineDurationInFrames: getTimelineDurationInFrames,
+        getTimelineFrameRate: getTimelineFrameRate,
+        setTimelineTimeInFrames: setTimelineTimeInFrames
     }
 })();
