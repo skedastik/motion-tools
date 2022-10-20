@@ -1,7 +1,8 @@
 # symbolic link to debug logs
 /logs
-# symbolic link to After Effects' scripts folder
+# symbolic link to apps' scripts folders
 /After Effects Scripts Folder
+/Photoshop Scripts Folder
 
 # macOS
 

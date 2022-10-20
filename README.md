@@ -1,8 +1,10 @@
 # motion-tools
 
-Various homespun After Effects scripts.
+Various homespun scripts to assist with animation using After Effects and Photoshop.
 
-## loop-selected-layers
+## After Effects
+
+### loop-selected-layers
 
 Infinitely loop the selected layer using Time Remapping, extending its outpoint to the end of the composition's timeline.
 
@@ -12,10 +14,18 @@ I use this mainly as a replacement for looping hand-drawn animation footage via 
 
 Go to the next/previous key in the currently selected layer. If keys are currently selected, only navigate between keys of selected properties.
 
-## posterize-time
+### posterize-time
 
 Apply a `posterizeTime(X)` expression to all selected properties where X is inputted via a prompt.
 
-## shift-layer-to-playhead
+### shift-layer-to-playhead
 
 Shift the currently selected layer(s) and all of its keys/markers in the timeline such that its start point is aligned with the playhead.
+
+## Photoshop
+
+WARNING: These are extremely WIP.
+
+### ps-select-layer-at-playhead
+
+Select the layer in the currently selected layer group under the timeline playhead. This script does nothing if no layer in the currently selected layer group is under the playhead.
