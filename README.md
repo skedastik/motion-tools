@@ -36,6 +36,3 @@ Known issues:
 ### ps-add-animation-frame
 
 Create a new layer matching the duration of the active layer, automatically advancing the playhead. The new layer is created after the active layer.
-
-Known issues:
-* This script will not work if the active layer is empty (has no pixel data).
