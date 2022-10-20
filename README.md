@@ -24,7 +24,7 @@ Shift the currently selected layer(s) and all of its keys/markers in the timelin
 
 ## Photoshop
 
-WARNING: These are extremely WIP.
+⚠️ WARNING: These are extremely WIP.
 
 ### ps-select-layer-at-playhead
 
@@ -35,4 +35,7 @@ Known issues:
 
 ### ps-add-animation-frame
 
-Create a new layer matching the duration of the current layer, automatically advancing the playhead. The new layer is created after the current layer.
+Create a new layer matching the duration of the active layer, automatically advancing the playhead. The new layer is created after the active layer.
+
+Known issues:
+* This script will not work if the active layer is empty (has no pixel data).
