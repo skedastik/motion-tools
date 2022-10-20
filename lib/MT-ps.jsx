@@ -112,24 +112,6 @@
         };
     }
 
-    // Nudge target layer one pixel over, then nudge it back. A no-op.
-    function nudgeLayerNoOp(layer) {
-        layer.translate(1, 0);
-        layer.translate(-1, 0);
-    }
-
-    function isPlayheadAtLayer(layer) {
-        try {
-            // A layer can only be nudged if the playhead is at that layer. We
-            // exploit this behavior to determine whether the playhead is at the
-            // a given layer.
-            nudgeLayerNoOp(layer);
-            return true;
-        } catch (e) {
-            return false;
-        }
-    }
-
     function clear() {
         // select all
         var idset = stringIDToTypeID( "set" );
@@ -148,7 +130,9 @@
 
         // clear
         var iddelete = stringIDToTypeID( "delete" );
-        executeAction( iddelete, undefined, DialogModes.NO );
+        try {
+            executeAction( iddelete, undefined, DialogModes.NO );
+        } catch (e) {}
 
         // deselect
         var idset = stringIDToTypeID( "set" );
@@ -166,6 +150,57 @@
         executeAction( idset, desc243, DialogModes.NO );
     }
 
+    // Nudge target layer one pixel over, then nudge it back. A no-op.
+    function nudgeLayerNoOp(layer) {
+        layer.translate(1, 0);
+        layer.translate(-1, 0);
+    }
+
+    function isPlayheadAtLayer(layer) {
+        try {
+            // A layer can only be nudged if the playhead is at that layer. We
+            // exploit this behavior to determine whether the playhead is at the
+            // a given layer.
+            nudgeLayerNoOp(layer);
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
+
+    // Select the layer in the currently selected layer group under the timeline
+    // playhead. This script does nothing if no layer in the currently selected
+    // layer group is under the playhead.
+    function selectLayerAtPlayhead() {
+        var document = app.activeDocument;
+        var activeLayer = document.activeLayer;
+
+        if (activeLayer.typename === 'LayerSet') {
+            activeLayer = activeLayer.artLayers[0];
+        }
+
+        if (isPlayheadAtLayer(activeLayer)) {
+            selectLayerByItemIndex(activeLayer.itemIndex)
+            // playhead is already at active layer--no further action necessary
+            return;
+        }
+
+        var siblingLayers = activeLayer.parent.artLayers;
+
+        for (var i = 0; i < siblingLayers.length; i++) {
+            var layer = siblingLayers[i];
+
+            selectLayerByItemIndex(layer.itemIndex);
+            
+            if (isPlayheadAtLayer(layer)) {
+                return;
+            }
+        }
+
+        // no layer in the group is under the playhead, so reset selection
+        selectLayerByItemIndex(activeLayer.itemIndex);
+    }
+
     module.exports = {
         getClassDescriptor: getClassDescriptor,
         actionDescriptorToString: actionDescriptorToString,
@@ -175,7 +210,8 @@
         goToPreviousFrame: goToPreviousFrame,
         goToNextFrame: goToNextFrame,
         getTimeline: getTimeline,
+        clear: clear,
         isPlayheadAtLayer: isPlayheadAtLayer,
-        clear: clear
+        selectLayerAtPlayhead: selectLayerAtPlayhead
     }
 })();
