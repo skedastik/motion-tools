@@ -25,7 +25,7 @@ require.init($.fileName);
         // Choose a TIME DELTA equal to the timeline duration.
         var TIME_DELTA = MT.ps.getTimelineDurationInFrames();
 
-        // Increase the out-point of the selected layer by the TIME DELTA.
+        // Increase the out-point of the active layer by the TIME DELTA.
         MT.ps.moveActiveLayerOutTimeInFrames(TIME_DELTA);
 
         // Record the resulting timeline duration.
