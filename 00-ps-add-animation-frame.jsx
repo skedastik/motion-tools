@@ -9,9 +9,14 @@ require.init($.fileName);
 
     function main() {
         var document = app.activeDocument;
+        var originalActiveLayer = document.activeLayer;
+
+        MT.ps.selectLayerAtPlayhead();
+
         var activeLayer = document.activeLayer;
 
         if (activeLayer.typename !== 'ArtLayer') {
+            MT.ps.selectLayerByItemIndex(originalActiveLayer.itemIndex);
             return;
         }
 
