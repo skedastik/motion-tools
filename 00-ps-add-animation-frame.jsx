@@ -20,18 +20,13 @@ require.init($.fileName);
             return;
         }
 
-        // this script will only work if the playhead is at the current layer
-        if (!MT.ps.isPlayheadAtLayer(activeLayer)) {
-            return;
-        }
-
-        activeLayer.duplicate();
+        var newLayer = activeLayer.duplicate();
 
         do {
             MT.ps.goToNextFrame();
         } while (MT.ps.isPlayheadAtLayer(activeLayer));
 
-        MT.ps.selectNextSiblingOfLayer(activeLayer);
+        MT.ps.selectLayerByItemIndex(newLayer.itemIndex);
     }
 
     try {
