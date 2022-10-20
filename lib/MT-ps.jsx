@@ -3,6 +3,16 @@
 
     var log = new LogFactory('motion-tools.log');
 
+    function getClassDescriptor(className) {
+        var r = new ActionReference();
+        r.putEnumerated(
+            stringIDToTypeID(className),
+            stringIDToTypeID("ordinal"),
+            stringIDToTypeID("targetEnum")
+        );
+        return executeActionGet(r);
+    }
+
     function actionDescriptorToString(d) {
         str = [];
         for (var i = 0; i < d.count; i++) {
@@ -20,9 +30,9 @@
         executeAction( stringIDToTypeID('select'), d1, DialogModes.NO );
     }
     
-    // Select the previous sibling art layer of given layer. Returns true if a
-    // previous sibling art layer exists, false otherwise.
-    function selectPreviousSiblingOfLayer(layer) {
+    // Select the next sibling art layer of given layer. Returns true if a next
+    // sibling art layer exists, false otherwise.
+    function selectNextSiblingOfLayer(layer) {
         var artLayers = layer.parent.layers;
         for (var i = 0; i < artLayers.length; i++) {
             if (artLayers[i] === layer) {
@@ -39,9 +49,9 @@
         }
     }
     
-    // Select the next sibling art layer of given layer. Returns true if a next
-    // sibling art layer exists, false otherwise.
-    function selectNextSiblingOfLayer(layer) {
+    // Select the previous sibling art layer of given layer. Returns true if a
+    // previous sibling art layer exists, false otherwise.
+    function selectPreviousSiblingOfLayer(layer) {
         var artLayers = layer.parent.layers;
         for (var i = 0; i < artLayers.length; i++) {
             if (artLayers[i] === layer) {
@@ -120,13 +130,52 @@
         }
     }
 
+    function clear() {
+        // select all
+        var idset = stringIDToTypeID( "set" );
+        var desc241 = new ActionDescriptor();
+        var idnull = stringIDToTypeID( "null" );
+        var ref90 = new ActionReference();
+        var idchannel = stringIDToTypeID( "channel" );
+        var idselection = stringIDToTypeID( "selection" );
+        ref90.putProperty( idchannel, idselection );
+        desc241.putReference( idnull, ref90 );
+        var idto = stringIDToTypeID( "to" );
+        var idordinal = stringIDToTypeID( "ordinal" );
+        var idallEnum = stringIDToTypeID( "allEnum" );
+        desc241.putEnumerated( idto, idordinal, idallEnum );
+        executeAction( idset, desc241, DialogModes.NO );
+
+        // clear
+        var iddelete = stringIDToTypeID( "delete" );
+        executeAction( iddelete, undefined, DialogModes.NO );
+
+        // deselect
+        var idset = stringIDToTypeID( "set" );
+        var desc243 = new ActionDescriptor();
+        var idnull = stringIDToTypeID( "null" );
+        var ref91 = new ActionReference();
+        var idchannel = stringIDToTypeID( "channel" );
+        var idselection = stringIDToTypeID( "selection" );
+        ref91.putProperty( idchannel, idselection );
+        desc243.putReference( idnull, ref91 );
+        var idto = stringIDToTypeID( "to" );
+        var idordinal = stringIDToTypeID( "ordinal" );
+        var idnone = stringIDToTypeID( "none" );
+        desc243.putEnumerated( idto, idordinal, idnone );
+        executeAction( idset, desc243, DialogModes.NO );
+    }
+
     module.exports = {
+        getClassDescriptor: getClassDescriptor,
+        actionDescriptorToString: actionDescriptorToString,
         selectLayerByItemIndex: selectLayerByItemIndex,
         selectPreviousSiblingOfLayer: selectPreviousSiblingOfLayer,
         selectNextSiblingOfLayer: selectNextSiblingOfLayer,
         goToPreviousFrame: goToPreviousFrame,
         goToNextFrame: goToNextFrame,
         getTimeline: getTimeline,
-        isPlayheadAtLayer: isPlayheadAtLayer
+        isPlayheadAtLayer: isPlayheadAtLayer,
+        clear: clear
     }
 })();

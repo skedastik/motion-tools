@@ -32,3 +32,7 @@ Select the layer in the currently selected layer group under the timeline playhe
 
 Known issues:
 * This script will not work if the layer under the playhead is empty (has no pixel data).
+
+### ps-add-animation-frame
+
+Create a new layer matching the duration of the current layer, automatically advancing the playhead. The new layer is created after the current layer.
