@@ -29,3 +29,6 @@ WARNING: These are extremely WIP.
 ### ps-select-layer-at-playhead
 
 Select the layer in the currently selected layer group under the timeline playhead. This script does nothing if no layer in the currently selected layer group is under the playhead.
+
+Known issues:
+* This script will not work if the layer under the playhead is empty (has no pixel data).
