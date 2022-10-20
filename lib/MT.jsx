@@ -1,5 +1,6 @@
 (function () {
     var LogFactory = require('./LogFactory.jsx');
+    var MT_ps = require('./MT-ps.jsx');
 
     var log = new LogFactory('motion-tools.log');
 
@@ -67,6 +68,8 @@
             });
             
             return keyTimes;
-        }
+        },
+
+        ps: MT_ps
     };
 })();
