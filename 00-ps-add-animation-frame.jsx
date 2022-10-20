@@ -27,6 +27,8 @@ require.init($.fileName);
         } while (MT.ps.isPlayheadAtLayer(activeLayer));
 
         MT.ps.selectLayerByItemIndex(newLayer.itemIndex);
+
+        MT.ps.clear();
     }
 
     try {
