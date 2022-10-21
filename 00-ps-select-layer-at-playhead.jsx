@@ -12,7 +12,7 @@ require.init($.fileName);
     }
 
     try {
-        app.activeDocument.suspendHistory('Select Layer at Playhead', 'main()');
+        main();
     } catch (e) {
         log(e);
     }

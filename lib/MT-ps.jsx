@@ -124,22 +124,24 @@
         executeAction( idset, desc243, DialogModes.NO );
     }
 
-    // Nudge target layer one pixel over, then nudge it back. A no-op.
-    function nudgeLayerNoOp(layer) {
-        layer.translate(1, 0);
-        layer.translate(-1, 0);
+    // Returns true if free transform is enabled
+    // from r-bin: https://community.adobe.com/t5/photoshop-ecosystem-discussions/is-there-any-way-to-move-the-time-indicator-of-timeline-to-first-frame-of-the-layer-using-photoshop/td-p/9945227
+    function isTransformEnabled(layer) {
+        var r = new ActionReference();        
+        r.putEnumerated(charIDToTypeID("capp"), charIDToTypeID("Ordn"), charIDToTypeID("Trgt"));    
+        var d = new ActionDescriptor();  
+        d.putReference( charIDToTypeID( "null" ), r );    
+        d.putString (stringIDToTypeID("command"), "getCommandEnabled");    
+        d.putDouble(stringIDToTypeID("commandID"), 2207 );    
+        return executeAction(stringIDToTypeID("uiInfo"), d, DialogModes.NO)
+            .getObjectValue(stringIDToTypeID("result"))
+            .getBoolean(stringIDToTypeID("enabled"));
     }
 
+    // Returns true if the timeline playhead is above the given layer, false
+    // otherwise.
     function isPlayheadAtLayer(layer) {
-        try {
-            // A layer can only be nudged if the playhead is at that layer. We
-            // exploit this behavior to determine whether the playhead is at the
-            // a given layer.
-            nudgeLayerNoOp(layer);
-            return true;
-        } catch (e) {
-            return false;
-        }
+        return isTransformEnabled();
     }
 
     // Select the layer in the currently selected layer group under the timeline
