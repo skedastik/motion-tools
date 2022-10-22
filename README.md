@@ -39,4 +39,4 @@ Create a new layer matching the duration of the active layer, automatically adva
 
 ### ps-next-frame + ps-prev-frame
 
-Go to the next/previous frame from the selected frame.
+Go to the next/previous layer from the selected layer in the timeline. Automatically move the playhead to that layer.
