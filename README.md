@@ -36,3 +36,7 @@ Known issues:
 ### ps-add-animation-frame
 
 Create a new layer matching the duration of the active layer, automatically advancing the playhead. The new layer is created after the active layer.
+
+### ps-next-frame + ps-prev-frame
+
+Go to the next/previous frame from the selected frame.

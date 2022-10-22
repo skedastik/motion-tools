@@ -1,6 +1,5 @@
 (function () {
     var LogFactory = require('./LogFactory.jsx');
-
     var log = new LogFactory('motion-tools.log');
 
     function getClassDescriptor(className) {
@@ -148,8 +147,7 @@
     // playhead. This script does nothing if no layer in the currently selected
     // layer group is under the playhead.
     function selectLayerAtPlayhead() {
-        var document = app.activeDocument;
-        var activeLayer = document.activeLayer;
+        var activeLayer = app.activeDocument.activeLayer;
 
         if (activeLayer.typename === 'LayerSet') {
             activeLayer = activeLayer.artLayers[0];
@@ -237,6 +235,132 @@
         var d = executeAction( idmoveOutTime, desc1857, DialogModes.NO );
     }
 
+    // Select next layer from the given layer. This may not necessarily be a
+    // sibling layer (i.e. in the same group).
+    function selectNextLayerFrom(layer) {
+        var idselect = stringIDToTypeID( "select" );
+        var desc609 = new ActionDescriptor();
+        var idnull = stringIDToTypeID( "null" );
+        var ref475 = new ActionReference();
+        var idlayer = stringIDToTypeID( "layer" );
+        var idordinal = stringIDToTypeID( "ordinal" );
+        var idforwardEnum = stringIDToTypeID( "forwardEnum" );
+        ref475.putEnumerated( idlayer, idordinal, idforwardEnum );
+        desc609.putReference( idnull, ref475 );
+        var idmakeVisible = stringIDToTypeID( "makeVisible" );
+        desc609.putBoolean( idmakeVisible, false );
+        var idlayerID = stringIDToTypeID( "layerID" );
+        var list263 = new ActionList();
+        list263.putInteger( layer.id );
+        desc609.putList( idlayerID, list263 );
+        executeAction( idselect, desc609, DialogModes.NO ); 
+    }
+
+    // Select previous layer from the given layer. This may not necessarily be a
+    // sibling layer (i.e. in the same group).
+    function selectPreviousLayerFrom(layer) {
+        var idselect = stringIDToTypeID( "select" );
+        var desc686 = new ActionDescriptor();
+        var idnull = stringIDToTypeID( "null" );
+        var ref549 = new ActionReference();
+        var idlayer = stringIDToTypeID( "layer" );
+        var idordinal = stringIDToTypeID( "ordinal" );
+        var idbackwardEnum = stringIDToTypeID( "backwardEnum" );
+        ref549.putEnumerated( idlayer, idordinal, idbackwardEnum );
+        desc686.putReference( idnull, ref549 );
+        var idmakeVisible = stringIDToTypeID( "makeVisible" );
+        desc686.putBoolean( idmakeVisible, false );
+        var idlayerID = stringIDToTypeID( "layerID" );
+        var list267 = new ActionList();
+        list267.putInteger( layer.id );
+        desc686.putList( idlayerID, list267 );
+        executeAction( idselect, desc686, DialogModes.NO );
+    }
+
+    // Return the duration of the given layer.
+    // SIDE EFFECTS: Undo history is affected.
+    function getLayerDuration(layer) {
+        // Choose a TIME DELTA equal to the timeline duration (X).
+        var TIME_DELTA = getTimelineDurationInFrames();
+
+        // Increase the out-point of the active layer by the TIME DELTA.
+        moveActiveLayerOutTimeInFrames(TIME_DELTA);
+
+        // Record the resulting timeline duration (A).
+        var da = getTimelineDurationInFrames();
+
+        // Duplicate the active layer to create a new animation frame with
+        // identical duration.
+        var newLayer = layer.duplicate();
+
+        // Record the timeline duration after duplicating (B).
+        var db = getTimelineDurationInFrames();
+
+        // Reset the active layer's out-point to its original value by
+        // substracting the TIME DELTA.
+        moveActiveLayerOutTimeInFrames(-TIME_DELTA);
+
+        // Select the new animation frame.
+        selectLayerByItemIndex(newLayer.itemIndex);
+
+        // Reset the duplication frame's duration too.
+        moveActiveLayerOutTimeInFrames(-TIME_DELTA);
+
+        // The layer's original duration can be derived as B - A - X. The reason
+        // we needed to first add the TIME DELTA is to guarantee that the
+        // layer's duration is longer than the timeline's.
+        return db - da - TIME_DELTA;
+    }
+
+    // Return the in-point (i.e. start time) of the active (selected) layer in
+    // frames.
+    // SIDE EFFECTS: Undo history is affected.
+    function getActiveLayerInPointInFrames() {
+        var activeLayer = app.activeDocument.activeLayer;
+        
+        var timelineDuration = getTimelineDurationInFrames();
+        var playheadPosition = getTimelineTimeInFrames();
+
+        var left = 0;
+        var right = playheadPosition + timelineDuration;
+        var mid;
+
+        // Increase the duration of the active layer by twice the timeline's
+        // duration, X, and move the playhead forward by X. The playhead is
+        // guaranteed to be above the timeline. 
+        moveActiveLayerOutTimeInFrames(timelineDuration * 2);
+        setTimelineTimeInFrames(right);
+
+        // Now it's just a matter of performing a binary search behind the
+        // playhead to find the in-point of the layer.
+        var max = 10;
+        var iters = 0;
+        do {
+            if (iters++ > max) {
+                break;
+            }
+            mid = Math.ceil((left + right) / 2);
+            setTimelineTimeInFrames(mid);
+            if (isPlayheadAtLayer(activeLayer)) {
+                right = mid;
+            } else {
+                left = mid;
+            }
+        } while (left + 1 < right);
+
+        // reset layer duration and playhead position
+        moveActiveLayerOutTimeInFrames(-timelineDuration * 2);
+        setTimelineTimeInFrames(playheadPosition);
+
+        if (right != 1) {
+            return right;
+        }
+
+        // we need to handle the special case of a frame starting at time 0
+        setTimelineTimeInFrames(0);
+        return isPlayheadAtLayer(activeLayer) ? 0 : 1;
+    }
+
     // move timeline playhead to given frame number
     function setTimelineTimeInFrames(frame) {
         var frameRate = getTimelineFrameRate();
@@ -280,6 +404,10 @@
         getTimelineTimeInFrames: getTimelineTimeInFrames,
         getTimelineDurationInFrames: getTimelineDurationInFrames,
         getTimelineFrameRate: getTimelineFrameRate,
-        setTimelineTimeInFrames: setTimelineTimeInFrames
+        setTimelineTimeInFrames: setTimelineTimeInFrames,
+        getLayerDuration: getLayerDuration,
+        getActiveLayerInPointInFrames: getActiveLayerInPointInFrames,
+        selectNextLayerFrom: selectNextLayerFrom,
+        selectPreviousLayerFrom: selectPreviousLayerFrom
     }
 })();
