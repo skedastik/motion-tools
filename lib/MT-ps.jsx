@@ -333,12 +333,8 @@
 
         // Now it's just a matter of performing a binary search behind the
         // playhead to find the in-point of the layer.
-        var max = 10;
         var iters = 0;
         do {
-            if (iters++ > max) {
-                break;
-            }
             mid = Math.ceil((left + right) / 2);
             setTimelineTimeInFrames(mid);
             if (isPlayheadAtLayer(activeLayer)) {
