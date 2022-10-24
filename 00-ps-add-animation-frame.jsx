@@ -18,7 +18,7 @@ require.init($.fileName);
 
         if (activeLayer.typename !== 'ArtLayer') {
             // We should have ended up with an art layer, reset and bail if not.
-            MT.ps.selectLayerByItemIndex(originalActiveLayer.itemIndex);
+            MT.ps.selectLayer(originalActiveLayer);
             return;
         }
 
@@ -49,7 +49,7 @@ require.init($.fileName);
         MT.ps.moveActiveLayerOutTimeInFrames(-TIME_DELTA);
 
         // Select the new animation frame.
-        MT.ps.selectLayerByItemIndex(newLayer.itemIndex);
+        MT.ps.selectLayer(newLayer);
 
         // The new animation frame's duration duplicated the TIME DELTA, so
         // reset it too.

@@ -20,13 +20,8 @@
         return str.join('\n');
     }
     
-    function selectLayerByItemIndex(itemIndex) {
-        var d1 = new ActionDescriptor();
-        var r1 = new ActionReference();
-        r1.putIndex( stringIDToTypeID('layer'), itemIndex );
-        d1.putReference( stringIDToTypeID('null'), r1 );
-        d1.putBoolean( stringIDToTypeID('MkVs'), false );
-        executeAction( stringIDToTypeID('select'), d1, DialogModes.NO );
+    function selectLayer(layer) {
+        app.activeDocument.activeLayer = layer;
     }
     
     // Select the next sibling art layer of given layer. Returns true if a next
@@ -42,7 +37,7 @@
                 if (sibling.typename !== 'ArtLayer') {
                     return false;
                 }
-                selectLayerByItemIndex(sibling.itemIndex);
+                selectLayer(sibling);
                 return true;
             }
         }
@@ -61,7 +56,7 @@
                 if (sibling.typename !== 'ArtLayer') {
                     return false;
                 }
-                selectLayerByItemIndex(sibling.itemIndex);
+                selectLayer(sibling);
                 return true;
             }
         }
@@ -154,7 +149,7 @@
         }
 
         if (isPlayheadAtLayer(activeLayer)) {
-            selectLayerByItemIndex(activeLayer.itemIndex)
+            selectLayer(activeLayer)
             // playhead is already at active layer--no further action necessary
             return;
         }
@@ -164,7 +159,7 @@
         for (var i = 0; i < siblingLayers.length; i++) {
             var layer = siblingLayers[i];
 
-            selectLayerByItemIndex(layer.itemIndex);
+            selectLayer(layer);
             
             if (isPlayheadAtLayer(layer)) {
                 return;
@@ -172,7 +167,7 @@
         }
 
         // no layer in the group is under the playhead, so reset selection
-        selectLayerByItemIndex(activeLayer.itemIndex);
+        selectLayer(activeLayer);
     }
 
     function getTimelineTimeInFrames() {
@@ -301,7 +296,7 @@
         moveActiveLayerOutTimeInFrames(-TIME_DELTA);
 
         // Select the new animation frame.
-        selectLayerByItemIndex(newLayer.itemIndex);
+        selectLayer(newLayer.id);
 
         // Reset the duplication frame's duration too.
         moveActiveLayerOutTimeInFrames(-TIME_DELTA);
@@ -388,7 +383,7 @@
     module.exports = {
         getClassDescriptor: getClassDescriptor,
         actionDescriptorToString: actionDescriptorToString,
-        selectLayerByItemIndex: selectLayerByItemIndex,
+        selectLayer: selectLayer,
         selectPreviousSiblingOfLayer: selectPreviousSiblingOfLayer,
         selectNextSiblingOfLayer: selectNextSiblingOfLayer,
         goToPreviousFrame: goToPreviousFrame,
