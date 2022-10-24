@@ -14,7 +14,7 @@ require.init($.fileName);
             MT.ps.setTimelineTimeInFrames(MT.ps.getActiveLayerInPointInFrames());
         }
 
-        app.activeDocument.suspendHistory('Add Animation Frame', 'main()');
+        app.activeDocument.suspendHistory('Previous Frame', 'main()');
     } catch (e) {
         log(e);
     }    
