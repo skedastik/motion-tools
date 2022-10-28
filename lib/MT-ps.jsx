@@ -179,11 +179,21 @@
         r.putClass( idtimeline );
         var d = executeActionGet(r).getObjectValue(stringIDToTypeID("time"));
         
+        var hours = 0;
+        try {
+            hours = d.getInteger(stringIDToTypeID("hours"));
+        } catch (e) {}
+
+        var minutes = 0;
+        try {
+            minutes = d.getInteger(stringIDToTypeID("minutes"));
+        } catch (e) {}
+
         var seconds = d.getInteger(stringIDToTypeID("seconds"));
         var frame = d.getInteger(stringIDToTypeID("frame"));
         var frameRate = d.getInteger(stringIDToTypeID("frameRate"));
 
-        return seconds * frameRate + frame;
+        return (hours * 60 * 60 + minutes * 60 + seconds) * frameRate + frame;
     }
 
     function getTimelineDurationInFrames() {
@@ -195,11 +205,21 @@
         r.putClass( idtimeline );
         var d = executeActionGet(r).getObjectValue(stringIDToTypeID("duration"));
         
+        var hours = 0;
+        try {
+            hours = d.getInteger(stringIDToTypeID("hours"));
+        } catch (e) {}
+
+        var minutes = 0;
+        try {
+            minutes = d.getInteger(stringIDToTypeID("minutes"));
+        } catch (e) {}
+
         var seconds = d.getInteger(stringIDToTypeID("seconds"));
         var frame = d.getInteger(stringIDToTypeID("frame"));
         var frameRate = d.getInteger(stringIDToTypeID("frameRate"));
 
-        return seconds * frameRate + frame;
+        return (hours * 60 * 60 + minutes * 60 + seconds) * frameRate + frame;
     }
 
     function getTimelineFrameRate() {
